@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --honey-track: #fff7ed; /* pale honey background */
+  --honey-thumb: #f6ad55; /* warm amber */
+  --honey-thumb-dark: #c17a24; /* darker thumb on hover/active */
+  --honey-thumb-glow: rgba(246, 173, 85, 0.18);
 }
 
 @theme inline {
@@ -19,8 +23,88 @@
   }
 }
 
+@font-face {
+  font-family: "Bornomala";
+  src: url("/fonts/Bornomala-Regular.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Bornomala", sans-serif;
+}
+
+.button-next,
+.button-prev {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  color: rgba(255, 255, 255, 0.766);
+  font-size: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button-next:hover,
+.button-prev:hover {
+  color: rgb(255, 255, 255);
+  transition: all;
+  transition-duration: 0.3s;
+}
+
+.button-next {
+  right: 10px !important;
+}
+
+.button-prev {
+  left: 10px !important;
+}
+
+/* Firefox */
+html,
+body {
+  scrollbar-width: thin; /* thin | auto | none */
+  scrollbar-color: var(--honey-thumb) var(--honey-track);
+}
+
+/* Webkit (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: var(--honey-track);
+  border-radius: 12px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--honey-thumb),
+    var(--honey-thumb-dark)
+  );
+  border-radius: 12px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 2px 6px rgba(193, 122, 36, 0.12);
+  transition: transform 120ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  transform: scale(1.05);
+  background: linear-gradient(180deg, #ffbf6b, var(--honey-thumb-dark));
+  box-shadow: 0 6px 18px rgba(193, 122, 36, 0.18);
+}
+
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active {
+  transform: scale(1.07);
+  background: linear-gradient(180deg, var(--honey-thumb-dark), #a85f10);
 }
