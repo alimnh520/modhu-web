@@ -40,7 +40,7 @@ export default function HoneyPage() {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:w-full">
                 {honeys ? (
-                    honeys.map((honey) => (
+                    honeys.slice().reverse().map((honey) => (
                         <motion.div
                             key={honey._id}
                             whileHover={{ scale: 1.03 }}
@@ -54,7 +54,7 @@ export default function HoneyPage() {
                             />
                             <div className="p-5 flex flex-col">
                                 <h2 className="text-xl font-semibold text-yellow-500">{honey.name}</h2>
-                                <p className="text-gray-500 line-through">৳{honey.discount}</p>
+                                {honey.discount > 0 && <p className="text-gray-500 line-through">৳{honey.discount}</p>}
                                 <p className="text-2xl font-bold text-green-600">৳{honey.price}</p>
                                 <Link href={`/components/order/${honey._id}`}>
                                     <motion.button
@@ -108,11 +108,11 @@ export default function HoneyPage() {
                                     className="w-full h-56 sm:h-72 object-contain rounded-lg"
                                 />
                                 <h2 className="text-xl sm:text-2xl font-bold text-amber-800 mt-4">{selected.name}</h2>
-                                <p className="text-gray-600 mt-2 text-sm sm:text-base">{selected.desc}</p>
+                                <p className="text-gray-600 mt-2 text-sm sm:text-base">{selected.dec}</p>
 
                                 <div className="mt-4">
-                                    <p className="text-gray-500 line-through">৳{selected.price}</p>
-                                    <p className="text-2xl font-bold text-green-600">৳{selected.discount}</p>
+                                    {selected.discount > 0 && <p className="text-gray-500 line-through">৳{selected.discount}</p>}
+                                    <p className="text-2xl font-bold text-green-600">৳{selected.price}</p>
                                 </div>
 
                                 <Link href={`/components/order/${selected._id}`}>

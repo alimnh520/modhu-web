@@ -35,6 +35,10 @@ export default function AdminDashboard() {
     const [loadingIds, setLoadingIds] = useState({}); // {id: boolean}
     const [newNotice, setNewNotice] = useState('');
     const [pwd, setPwd] = useState({ newPass: '', confirmPass: '' });
+    const [newProduct, setNewProduct] = useState({ name: '', price: '', dec: '', img: null });
+    const [addModal, setAddModal] = useState(false);
+    const [preview, setPreview] = useState(null);
+
 
 
     useEffect(() => {
@@ -194,6 +198,65 @@ export default function AdminDashboard() {
         }
     };
 
+    // নতুন পণ্য যোগ
+
+    const addProduct = async () => {
+        if (!newProduct.name || !newProduct.price || !newProduct.dec || !newProduct.img) {
+            return toast.error('সব ফিল্ড পূরণ করুন');
+        }
+
+        if (newProduct.img.size > 3 * 1024 * 1024) {
+            return toast.error('ছবির আকার 3MB এর বেশি হতে পারবে না');
+        }
+
+        const formData = new FormData();
+        formData.append('name', newProduct.name);
+        formData.append('price', newProduct.price);
+        formData.append('dec', newProduct.dec);
+        formData.append('img', newProduct.img);
+
+        try {
+            const res = await fetch('/api/product', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                setNewProduct({ name: '', price: '', dec: '', img: null });
+                toast.success('নতুন পণ্য যোগ হয়েছে');
+                window.location.reload();
+            } else {
+                toast.error(data.message || 'পণ্য যোগ করা যায়নি');
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error('সার্ভার সমস্যা');
+        }
+    };
+
+    const handleDelete = async (id, url) => {
+
+        try {
+            const res = await fetch('/api/product', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, url }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success('পণ্য সফলভাবে মুছে ফেলা হয়েছে');
+                setNewProduct({ name: '', price: '', dec: '', img: null, url: null, _id: null });
+                window.location.reload();
+            } else {
+                toast.error(data.message || 'পণ্য মুছে ফেলা যায়নি');
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error('সার্ভার সমস্যা');
+        }
+    }
+
+
     /* ------------------ Small UI helpers ------------------ */
     const stat = (label, value, subtitle) => (
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow border border-amber-100">
@@ -257,6 +320,7 @@ export default function AdminDashboard() {
                             </div>
 
                             <div className="bg-white rounded-2xl shadow-lg p-5 border border-amber-100">
+
                                 {/* PRODUCTS */}
                                 {active === 'products' && (
                                     <>
@@ -265,9 +329,87 @@ export default function AdminDashboard() {
                                             <div className="text-sm text-amber-600">মোট {products.length} পণ্য</div>
                                         </div>
 
+                                        {/* নতুন পণ্য যোগ করার বাটন */}
+                                        <div className="mb-4">
+                                            <button
+                                                className="px-4 py-2 bg-green-500 text-white rounded flex items-center gap-2"
+                                                onClick={() => setAddModal(true)}
+                                            >
+                                                <FaPlus /> নতুন পণ্য যোগ করুন
+                                            </button>
+                                        </div>
+
+                                        {/* Add Product Modal */}
+                                        {addModal && (
+                                            <Modal onClose={() => setAddModal(false)}>
+                                                <div className="space-y-3">
+                                                    <h3 className="text-lg font-semibold">নতুন পণ্য যোগ করুন</h3>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="নাম"
+                                                        value={newProduct.name}
+                                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                                        className="w-full p-2 border rounded"
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        placeholder="মূল্য"
+                                                        value={newProduct.price}
+                                                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                                        className="w-full p-2 border rounded"
+                                                    />
+                                                    <textarea
+                                                        placeholder="বিবরণ"
+                                                        value={newProduct.dec}
+                                                        onChange={(e) => setNewProduct({ ...newProduct, dec: e.target.value })}
+                                                        className="w-full p-2 border rounded"
+                                                    />
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files[0];
+                                                            setNewProduct({ ...newProduct, img: file });
+                                                            if (file) {
+                                                                setPreview(URL.createObjectURL(file)); // preview সেট
+                                                            } else {
+                                                                setPreview(null);
+                                                            }
+                                                        }}
+                                                        className="w-full"
+                                                    />
+
+                                                    <div className="flex justify-end gap-2">
+                                                        <button
+                                                            className="px-4 py-2 rounded border"
+                                                            onClick={() => setAddModal(false)}
+                                                        >
+                                                            বাতিল
+                                                        </button>
+                                                        <button
+                                                            className="px-4 py-2 bg-green-500 text-white rounded"
+                                                            onClick={() => {
+                                                                addProduct();
+                                                                setAddModal(false);
+                                                            }}
+                                                        >
+                                                            যোগ করুন
+                                                        </button>
+                                                    </div>
+                                                    {preview && (
+                                                        <div className="h-40 flex items-center justify-center mb-3 relative">
+                                                            <img src={preview} alt="Preview" className="max-h-full object-contain" />
+                                                        </div>
+                                                    )}
+
+                                                </div>
+                                            </Modal>
+                                        )}
+
+                                        {/* Existing Products */}
                                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                             {products.length === 0 && <div className="col-span-full p-6 text-center text-amber-600">কোনো পণ্য পাওয়া যায়নি</div>}
-                                            {products.map((p) => (
+                                            {products.slice().reverse().map((p) => (
                                                 <div key={p._id} className="bg-yellow-50 rounded-xl p-4 shadow-sm border border-amber-100 flex flex-col">
                                                     <div className="h-40 flex items-center justify-center mb-3">
                                                         <img src={p.img || '/category/honey.png'} alt={p.name} className="max-h-full object-contain" />
@@ -287,6 +429,7 @@ export default function AdminDashboard() {
                                         </div>
                                     </>
                                 )}
+
 
                                 {/* ORDERS */}
                                 {active === 'orders' && (
@@ -407,6 +550,12 @@ export default function AdminDashboard() {
                             <input type="number" value={editModal.price} onChange={(e) => setEditModal({ ...editModal, price: e.target.value })} className="w-full p-2 border rounded mt-1" />
                         </div>
                         <div className="flex gap-2 justify-end">
+                            <button
+                                onClick={() => handleDelete(editModal._id, editModal.url)}
+                                className="px-4 py-2 rounded border bg-red-500 text-white "
+                            >
+                                ডিলেট
+                            </button>
                             <button className="px-4 py-2 rounded border" onClick={() => setEditModal(null)}>Cancel</button>
                             <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={saveEdit} disabled={loadingIds[editModal._id]}>
                                 {loadingIds[editModal._id] ? 'Saving...' : 'Save'}

@@ -33,12 +33,20 @@ export default function Footer() {
                 {/* Categories */}
                 <div className="space-y-3">
                     <h3 className="text-lg font-bold border-b border-b-yellow-400">ক্যাটাগরি</h3>
-                    <ul className="space-y-2 text-amber-600">
-                        <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">সরিষা ফুলের মধু</button></li>
-                        <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">কালোজিরা ফুলের মধু</button></li>
-                        <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">খলিশা ফুলের মধু</button></li>
-                        <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">ধনিয়া ফুলের মধু</button></li>
-                    </ul>
+                    <div className="flex items-center justify-between">
+                        <ul className="space-y-2 list-disc list-outside text-amber-600">
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">সরিষা ফুলের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">কালোজিরা ফুলের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">খলিশা ফুলের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">ধনিয়া ফুলের মধু</button></li>
+                        </ul>
+                        <ul className="space-y-2 list-disc list-outside text-amber-600">
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">লিচু ফুলের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">বরই ফুলের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">প্রাকৃতিক চাকের মধু</button></li>
+                            <li><button onClick={scrollToHoney} className="hover:text-yellow-600 cursor-pointer transition">মিশ্র ফুলের মধু</button></li>
+                        </ul>
+                    </div>
                 </div>
 
                 {/* Contact Info */}
@@ -68,7 +76,7 @@ export default function Footer() {
                         <a href="https://wa.link/5q154r" target='_blank' className="w-10 h-10 flex items-center justify-center rounded-full bg-amber-200 text-amber-800 hover:bg-amber-300 hover:text-white transition">
                             <FaWhatsapp />
                         </a>
-                        <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-amber-200 text-amber-800 hover:bg-amber-300 hover:text-white transition">
+                        <a href="https://youtube.com/@driemvalleying?si=YxviKzOLGXrddPPB" target='_blank' className="w-10 h-10 flex items-center justify-center rounded-full bg-amber-200 text-amber-800 hover:bg-amber-300 hover:text-white transition">
                             <FaYoutube />
                         </a>
                     </div>
