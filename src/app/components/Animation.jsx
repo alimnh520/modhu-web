@@ -1,5 +1,5 @@
 'use client'
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserContext } from '../Provider';
@@ -25,12 +25,19 @@ const Animation = () => {
         );
     };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveIndex(prev => (prev + 1) % animateImg.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, []);
+
     const scrollToHoney = () => {
         scrollPath.current?.scrollIntoView({ behavior: "smooth" });
     };
 
     return (
-        <div className="w-full flex flex-col items-center py-1.5 sm:py-4 px-1">
+        <div className="w-full flex flex-col items-center py-1.5 sm:py-2 px-1">
             {/* Image Slider */}
             <div className="relative w-full max-w-7xl h-[190px] sm:h-[350px] md:h-[500px] lg:h-[600px] flex items-center justify-center overflow-hidden sm:rounded-2xl rounded-lg shadow-2xl">
                 <AnimatePresence mode="wait">
@@ -49,13 +56,13 @@ const Animation = () => {
                 {/* Navigation */}
                 <button
                     onClick={handlePrev}
-                    className="absolute top-1/2 left-4 -translate-y-1/2 bg-gradient-to-b from-yellow-900/40 via-yellow-600/40 to-yellow-500/40 rounded-full hover:text-yellow-400 text-white text-5xl drop-shadow-lg transition"
+                    className="absolute top-1/2 left-4 -translate-y-1/2 bg-gradient-to-b from-yellow-900/40 via-yellow-600/40 to-yellow-500/40 rounded-full hover:text-yellow-400 text-white text-2xl sm:text-3xl drop-shadow-lg transition"
                 >
                     <CiCircleChevLeft />
                 </button>
                 <button
                     onClick={handleNext}
-                    className="absolute top-1/2 right-4 -translate-y-1/2 bg-gradient-to-b from-yellow-900/40 via-yellow-600/40 to-yellow-500/40 rounded-full hover:text-yellow-400 text-white text-5xl drop-shadow-lg transition"
+                    className="absolute top-1/2 right-4 -translate-y-1/2 bg-gradient-to-b from-yellow-900/40 via-yellow-600/40 to-yellow-500/40 rounded-full hover:text-yellow-400 text-white text-2xl sm:text-3xl drop-shadow-lg transition"
                 >
                     <CiCircleChevRight />
                 </button>
@@ -93,13 +100,13 @@ const Animation = () => {
                      text-black hover:text-white
                      shadow-md hover:shadow-xl
                      transitio"
-                     onClick={scrollToHoney}
+                    onClick={scrollToHoney}
                 >
                     এখনই কিনুন
                 </motion.button>
 
             </div>
-            <NoticeBar/>
+            <NoticeBar />
         </div>
     );
 };
