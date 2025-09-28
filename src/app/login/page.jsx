@@ -1,7 +1,7 @@
 'use client';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUserShield } from "react-icons/fa";
 
 export default function LoginPage() {
