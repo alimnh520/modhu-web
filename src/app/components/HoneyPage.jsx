@@ -33,7 +33,7 @@ export default function HoneyPage() {
         <div className="py-4 px-6 pb-16 sm:pt-8 pt-6" ref={scrollView}>
             <div className="sm:text-4xl text-xl font-extrabold flex items-center gap-x-3 justify-center text-amber-600 text-center sm:mb-12 mb-5">
                 <div className="w-40 hidden sm:block h-0.5 bg-yellow-500"></div>
-                <h1> আমাদের প্রিমিয়াম মধু কালেকশন </h1>
+                <h1> আমাদের সকল পণ্যের কালেকশন </h1>
                 <img src="/category/honey.png" alt="" className="w-10 -mt-1" />
                 <div className="w-40 hidden sm:block h-0.5 bg-yellow-500"></div>
             </div>

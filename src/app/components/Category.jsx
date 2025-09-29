@@ -31,7 +31,7 @@ export default function Category() {
 
             {/* ক্যাটেগরি গ্রিড */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
-                {honeys ? honeys?.slice(0, 4).map((honey) => (
+                {honeys ? honeys?.slice(0, 8).map((honey) => (
                     <div
                         key={honey._id}
                         className="bg-white flex items-center justify-center rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl relative hover:scale-105 transition-all duration-300"

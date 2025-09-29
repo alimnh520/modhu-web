@@ -417,7 +417,7 @@ export default function AdminDashboard() {
                                                     <div className="flex-1">
                                                         <h3 className="text-lg font-semibold mb-1">{p.name}</h3>
                                                         <div className="flex items-center justify-between">
-                                                            <div className="text-sm text-amber-700 line-through">৳{p.discount ?? ''}</div>
+                                                            {p.discount && <div className="text-sm text-amber-700 line-through">৳{p.discount ?? ''}</div>}
                                                             <div className="text-2xl font-bold text-amber-800">৳{p.price}</div>
                                                         </div>
                                                     </div>
@@ -540,97 +540,103 @@ export default function AdminDashboard() {
             </div>
 
             {/* Edit Product Modal */}
-            {editModal && (
-                <Modal onClose={() => setEditModal(null)}>
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">{editModal.name}</h3>
-                        <img src={editModal.img} alt={editModal.name} className="h-36 object-contain mx-auto" />
-                        <div>
-                            <label className="text-sm text-amber-700">মূল্য (৳)</label>
-                            <input type="number" value={editModal.price} onChange={(e) => setEditModal({ ...editModal, price: e.target.value })} className="w-full p-2 border rounded mt-1" />
+            {
+                editModal && (
+                    <Modal onClose={() => setEditModal(null)}>
+                        <div className="space-y-3">
+                            <h3 className="text-lg font-semibold">{editModal.name}</h3>
+                            <img src={editModal.img} alt={editModal.name} className="h-36 object-contain mx-auto" />
+                            <div>
+                                <label className="text-sm text-amber-700">মূল্য (৳)</label>
+                                <input type="number" value={editModal.price} onChange={(e) => setEditModal({ ...editModal, price: e.target.value })} className="w-full p-2 border rounded mt-1" />
+                            </div>
+                            <div className="flex gap-2 justify-end">
+                                <button
+                                    onClick={() => handleDelete(editModal._id, editModal.url)}
+                                    className="px-4 py-2 rounded border bg-red-500 text-white "
+                                >
+                                    ডিলেট
+                                </button>
+                                <button className="px-4 py-2 rounded border" onClick={() => setEditModal(null)}>Cancel</button>
+                                <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={saveEdit} disabled={loadingIds[editModal._id]}>
+                                    {loadingIds[editModal._id] ? 'Saving...' : 'Save'}
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex gap-2 justify-end">
-                            <button
-                                onClick={() => handleDelete(editModal._id, editModal.url)}
-                                className="px-4 py-2 rounded border bg-red-500 text-white "
-                            >
-                                ডিলেট
-                            </button>
-                            <button className="px-4 py-2 rounded border" onClick={() => setEditModal(null)}>Cancel</button>
-                            <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={saveEdit} disabled={loadingIds[editModal._id]}>
-                                {loadingIds[editModal._id] ? 'Saving...' : 'Save'}
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
-            )}
+                    </Modal>
+                )
+            }
 
             {/* Order Detail Modal */}
-            {orderModal && (
-                <Modal onClose={() => setOrderModal(null)}>
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">অর্ডার ডিটেইল</h3>
-                        <div className="grid grid-cols-1 gap-2">
-                            <div><strong>গ্রাহক:</strong> {orderModal.name}</div>
-                            <div><strong>মোবাইল:</strong> {orderModal.mobile}</div>
-                            <div><strong>ঠিকানা:</strong> {orderModal.address}, {orderModal.upazilla}, {orderModal.district}, {orderModal.division}</div>
-                            <div><strong>প্রোডাক্ট:</strong> {orderModal.productName}</div>
-                            <div><strong>পরিমান:</strong> {orderModal.quantity}</div>
-                            <div><strong>একক মূল্য:</strong> ৳{orderModal.price}</div>
-                            <div><strong>মোট মূল্য:</strong> ৳{orderModal.totalPrice ?? (orderModal.price * orderModal.quantity)}</div>
-                            <div><strong>ডেলিভারি চার্জ:</strong> ৳{orderModal.charge ?? 120}</div>
-                            <div><strong>স্ট্যাটাস:</strong> <span className={`px-2 py-1 rounded ${orderModal.status === 'pending' ? 'bg-yellow-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>{orderModal.status}</span></div>
+            {
+                orderModal && (
+                    <Modal onClose={() => setOrderModal(null)}>
+                        <div className="space-y-3">
+                            <h3 className="text-lg font-semibold">অর্ডার ডিটেইল</h3>
+                            <div className="grid grid-cols-1 gap-2">
+                                <div><strong>গ্রাহক:</strong> {orderModal.name}</div>
+                                <div><strong>মোবাইল:</strong> {orderModal.mobile}</div>
+                                <div><strong>ঠিকানা:</strong> {orderModal.address}, {orderModal.upazilla}, {orderModal.district}, {orderModal.division}</div>
+                                <div><strong>প্রোডাক্ট:</strong> {orderModal.productName}</div>
+                                <div><strong>পরিমান:</strong> {orderModal.quantity}</div>
+                                <div><strong>একক মূল্য:</strong> ৳{orderModal.price}</div>
+                                <div><strong>মোট মূল্য:</strong> ৳{orderModal.totalPrice ?? (orderModal.price * orderModal.quantity)}</div>
+                                <div><strong>ডেলিভারি চার্জ:</strong> ৳{orderModal.charge ?? 120}</div>
+                                <div><strong>স্ট্যাটাস:</strong> <span className={`px-2 py-1 rounded ${orderModal.status === 'pending' ? 'bg-yellow-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>{orderModal.status}</span></div>
+                            </div>
+
+                            {
+                                orderModal.status === 'pending' && (
+                                    <div className="flex gap-2 justify-end mt-3">
+                                        <button className="px-4 py-2 bg-red-500 text-white rounded" onClick={() => updateOrderStatus(orderModal._id, 'cancelled')}>বাতিল</button>
+                                        <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => updateOrderStatus(orderModal._1d || orderModal._id, 'confirmed')}>Confirm</button>
+                                    </div>
+                                )
+                            }
+
                         </div>
-
-                        {
-                            orderModal.status === 'pending' && (
-                                <div className="flex gap-2 justify-end mt-3">
-                                    <button className="px-4 py-2 bg-red-500 text-white rounded" onClick={() => updateOrderStatus(orderModal._id, 'cancelled')}>বাতিল</button>
-                                    <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => updateOrderStatus(orderModal._1d || orderModal._id, 'confirmed')}>Confirm</button>
-                                </div>
-                            )
-                        }
-
-                    </div>
-                </Modal>
-            )}
+                    </Modal>
+                )
+            }
 
             {/* Message Modal */}
-            {msgModal && (
-                <Modal onClose={() => setMsgModal(null)}>
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">বার্তার বিস্তারিত</h3>
-                        <div className="grid gap-2">
-                            <div><strong>নাম:</strong> {msgModal.name}</div>
-                            <div><strong>মোবাইল:</strong> {msgModal.mobile}</div>
-                            <div><strong>বার্তা:</strong> <p className="mt-1 text-amber-800">{msgModal.message}</p></div>
-                            <div><strong>তারিখ:</strong> {msgModal.createdAt ? new Date(msgModal.createdAt).toLocaleString("bn-BD") : 'N/A'}</div>
-                        </div>
+            {
+                msgModal && (
+                    <Modal onClose={() => setMsgModal(null)}>
+                        <div className="space-y-3">
+                            <h3 className="text-lg font-semibold">বার্তার বিস্তারিত</h3>
+                            <div className="grid gap-2">
+                                <div><strong>নাম:</strong> {msgModal.name}</div>
+                                <div><strong>মোবাইল:</strong> {msgModal.mobile}</div>
+                                <div><strong>বার্তা:</strong> <p className="mt-1 text-amber-800">{msgModal.message}</p></div>
+                                <div><strong>তারিখ:</strong> {msgModal.createdAt ? new Date(msgModal.createdAt).toLocaleString("bn-BD") : 'N/A'}</div>
+                            </div>
 
-                        <div className="flex gap-2 justify-end mt-3">
-                            <button
-                                className="px-4 py-2 rounded border"
-                                onClick={() => setMsgModal(null)}
-                            >
-                                বন্ধ করুন
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-red-500 text-white rounded"
-                                onClick={() => {
-                                    deleteMessage(msgModal._id);
-                                    setMsgModal(null);
-                                }}
-                                disabled={loadingIds[msgModal._id]}
-                            >
-                                {loadingIds[msgModal._id] ? 'মুছানো হচ্ছে...' : 'ডিলিট'}
-                            </button>
+                            <div className="flex gap-2 justify-end mt-3">
+                                <button
+                                    className="px-4 py-2 rounded border"
+                                    onClick={() => setMsgModal(null)}
+                                >
+                                    বন্ধ করুন
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-red-500 text-white rounded"
+                                    onClick={() => {
+                                        deleteMessage(msgModal._id);
+                                        setMsgModal(null);
+                                    }}
+                                    disabled={loadingIds[msgModal._id]}
+                                >
+                                    {loadingIds[msgModal._id] ? 'মুছানো হচ্ছে...' : 'ডিলিট'}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </Modal>
-            )}
+                    </Modal>
+                )
+            }
 
             <ToastContainer position="bottom-right" autoClose={2000} />
-        </div>
+        </div >
     );
 }
 
